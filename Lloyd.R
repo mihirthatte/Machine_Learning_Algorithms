@@ -53,6 +53,13 @@ print(centroids)
 
 #Calculate Average - 
 
+for(k_i in 1:k){
+  for(x in 1:nrow(new_data)){
+    if (new_data[x,ncol(new_data)] == k_i){
+      new_data[x,1]
+    }
+  }
+}
 
 
 
