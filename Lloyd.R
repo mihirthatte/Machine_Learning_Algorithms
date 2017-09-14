@@ -1,5 +1,5 @@
-data = matrix(c(1,1,0,5,6,4))
-data = cbind(data,c(4,3,4,1,2,0))
+data = matrix(c(2,1,22,42,15))
+data = cbind(data,c(5,5,55,12,16))
 head(data)
 row = nrow(data)
 col = ncol(data)
@@ -35,38 +35,54 @@ for(i in 2:k){
   centroids <- cbind(centroids, runif(ncol(new_data),-1,1)) 
 }
 #centroids one column defines a point in N-dimension
-
+new_data = cbind(data,rep(0,nrow(data)),deparse.level = 0)
+iteration = 1
+repeat{
 v=vector(mode="numeric",length =0)
 for(row in 1: nrow(new_data)){
-  centroid_index = get_centroid(centroids,new_data[row,])
+  centroid_index = get_centroid(centroids,new_data[row,1:ncol(new_data)-1])
   v <- c(v,centroid_index)
 }
-print(nrow(new_data))
-print(length(v))
-new_data = cbind(new_data,v,deparse.level = 0) # centroid got assigned to each data point
-print(new_data)
-print(centroids)
-#Initialization Complete
-#print(new_data[,3])
 
+new_data = new_data[,-ncol(new_data)]
+new_data = cbind(new_data,v,deparse.level = 0) # centroid got assigned to each data point
+
+old_centroids <- centroids
 #aggregate(new_data[,c], by=list(new_data[,ncol(new_data)]), FUN=mean)
 
 #Calculate Average - 
-
 for(k_i in 1:k){
+  new_c = matrix(rep(0,ncol(new_data)-1),nrow=1, ncol=ncol(new_data)-1)
+  iiter=1
   for(x in 1:nrow(new_data)){
     if (new_data[x,ncol(new_data)] == k_i){
-      new_data[x,1]
+      new_c = rbind(new_c, new_data[x,1:ncol(new_data)-1])
+      
     }
   }
+  
+  for(x in 1:ncol(new_c)){
+    centroids[x,k_i] = sum(new_c[,x])/(length(new_c[,x])-1)
+  }
+  
 }
+diff_centroids = old_centroids - centroids
 
+norm_vec <- function(x) {
+  return(sqrt(sum(x^2)))
+}
+convergence = 0
+for(i in 1:ncol(diff_centroids)){
+  convergence = convergence+ norm_vec(diff_centroids[,i])
+}
+cat("iteration - ",iteration,"\n")
+print(convergence/k)
+iteration=iteration+1
+if(convergence/k <10)
+  break
 
-
-
-
-
-
+}
+print(centroids)
 
 
 
