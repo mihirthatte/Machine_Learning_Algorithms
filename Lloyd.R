@@ -34,8 +34,9 @@ centroids = matrix(runif(ncol(new_data),min(new_data),max(new_data))) #randomly 
 for(i in 2:k){
   centroids <- cbind(centroids, runif(ncol(new_data),-1,1)) 
 }
+
 #centroids one column defines a point in N-dimension
-new_data = cbind(data,rep(0,nrow(data)),deparse.level = 0)
+new_data = cbind(new_data,rep(0,nrow(new_data)),deparse.level = 0)
 iteration = 1
 repeat{
 v=vector(mode="numeric",length =0)
@@ -53,7 +54,6 @@ old_centroids <- centroids
 #Calculate Average - 
 for(k_i in 1:k){
   new_c = matrix(rep(0,ncol(new_data)-1),nrow=1, ncol=ncol(new_data)-1)
-  iiter=1
   for(x in 1:nrow(new_data)){
     if (new_data[x,ncol(new_data)] == k_i){
       new_c = rbind(new_c, new_data[x,1:ncol(new_data)-1])
