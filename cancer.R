@@ -1,10 +1,6 @@
 #Initialize number of centroid -
 k = 2
 
-min(data[,2:ncol(data)])
-library("scales")
-z = data[,1]
-z1 = rescale(z, from=c( 1, 10))
 
 set.seed(1)
 data = read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.data",header=FALSE)
@@ -13,13 +9,32 @@ na.omit(data)
 data = data[-grep("\\?",data[,7]),]
 data[,7] <- as.integer(as.character(data[,7]))
 
+
+min = min(data[,1])
+max = max(data[,1])
+for(r in 1:nrow(data)){
+  data[r,1] = (data[r,1] - min)/(max - min)
+  if(data[r,1]==0)
+    data[r,1] = 1
+  else if (data[r,1]==1)
+    data[r,1] = 10
+  else
+    data[r,1] = data[r,1] *100
+  if(data[r,1] > 10)
+    data[r,1] = 10
+  
+  
+}
+
+for(r in 1:nrow(data)){
+ data[r,1] = floor(data[r,1]) 
+}
+
 row = nrow(data)
 col = ncol(data)
 
 
-for(r in 1:nrow(data)){
-data[r,1] = data[r,1]-min(data[,1])
-}
+
 
 new_data = data
 #head(new_data)
